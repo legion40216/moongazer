@@ -15,7 +15,7 @@ Built mobile-first for iOS and Android, with cross-platform desktop support.
   - Moon distance & Sun distance (km)
   - Last/next new moon, first/last quarter, full moon
   - Next perigee & apogee
-  - Next solar & lunar eclipse with type (Total / Partial / Annular / Penumbral)
+  - Next solar & lunar eclipse with type (Total / Partial / Annular / Hybrid / Non-central / Penumbral) and a countdown
 - **Skip Time mode** — accelerated simulation (1 hour/sec) to watch the moon cycle
 - **Hemisphere toggle** — Northern / Southern (mirrors moon orientation)
 - **Neil Armstrong audio** — "one small step…" plays on launch (NASA public domain)
@@ -73,6 +73,27 @@ Tests validate against known NASA-confirmed astronomical events:
 - Moon distance bounds 356,000–406,700 km ✓
 
 ---
+
+## 🎯 Accuracy
+
+Every calculation is validated against an independent ephemeris
+([Astronomy Engine](https://github.com/cosinekitty/astronomy)). Measured results:
+
+| Quantity | Result |
+|---|---|
+| Moon distance | within ~44 km (~0.01 %) |
+| Sun distance | within ~13,000 km (~0.01 %) |
+| Moon illumination | within 0.3 percentage points |
+| New / quarter / full moon times | within ~1 minute (2000–2100) |
+| Solar eclipses (2000–2100) | 226 / 226 found, all types correct, time within ~3 min |
+| Lunar eclipses (2000–2100) | 228 / 228 found, time within ~3 min; 2 knife-edge type calls differ |
+| Apogee time | within ~2 minutes |
+| Perigee time | within ~30 minutes (rms ~7 min) — display as a date only |
+
+Known limits: ΔT (TT−UT) is a fixed 69 s, which is right for the 2020s and drifts by about a
+second per year; the perigee table has two coefficients that were corrected empirically
+against the reference rather than from the printed table (see comment in
+`periapsis_calculator.dart`).
 
 ## 🏗 Architecture
 
