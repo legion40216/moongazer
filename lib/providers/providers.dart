@@ -147,6 +147,8 @@ class MoonStateNotifier extends StateNotifier<MoonState> {
     final pos = MoonCalculator.calculate(dt);
     final sunDist = SunCalculator.distanceKm(dt);
 
+    final lunation = MoonCalculator.lunation(dt);
+
     return MoonState(
       displayTime: dt,
       utcTime: dt.toUtc(),
@@ -156,15 +158,11 @@ class MoonStateNotifier extends StateNotifier<MoonState> {
       elongation: pos.elongation,
       moonDistanceKm: pos.distanceKm,
       sunDistanceKm: sunDist,
-      lastNewMoon: MoonCalculator.lastNewMoon(dt),
-      firstQuarter:
-          MoonCalculator.nextPhaseEvent(dt, PhaseEventType.firstQuarter),
-      fullMoon:
-          MoonCalculator.nextPhaseEvent(dt, PhaseEventType.fullMoon),
-      lastQuarter:
-          MoonCalculator.nextPhaseEvent(dt, PhaseEventType.lastQuarter),
-      nextNewMoon:
-          MoonCalculator.nextPhaseEvent(dt, PhaseEventType.newMoon),
+      lastNewMoon: lunation.lastNewMoon,
+      firstQuarter: lunation.firstQuarter,
+      fullMoon: lunation.fullMoon,
+      lastQuarter: lunation.lastQuarter,
+      nextNewMoon: lunation.nextNewMoon,
       nextPerigee: PeriapsisCalculator.nextPerigee(dt),
       nextApogee: PeriapsisCalculator.nextApogee(dt),
       nextSolarEclipse: solar,

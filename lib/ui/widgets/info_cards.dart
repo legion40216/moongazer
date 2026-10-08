@@ -15,6 +15,16 @@ final _dtFmt = DateFormat('d MMM  HH:mm');
 String _fmtDT(DateTime dt) => _dtFmt.format(dt.toLocal());
 String _fmtDate(DateTime dt) => _dateFmt.format(dt.toLocal());
 
+/// "in 121d 3h 12m" — mirrors the original's days/hours/minutes formatter.
+String _countdown(DateTime from, DateTime to) {
+  final d = to.difference(from);
+  if (d.isNegative) return '';
+  final days = d.inDays;
+  final hours = d.inHours % 24;
+  final mins = d.inMinutes % 60;
+  return 'in ${days}d ${hours}h ${mins}m';
+}
+
 // ── Card shell ───────────────────────────────────────────────────────────────
 
 class _InfoCard extends StatelessWidget {
@@ -168,21 +178,16 @@ class EclipseCard extends StatelessWidget {
     final solar = state.nextSolarEclipse;
     final lunar = state.nextLunarEclipse;
 
+    String describe(EclipseEvent? e) => e == null
+        ? 'Calculating…'
+        : '${_fmtDate(e.date)}  ${e.typeLabel}\n'
+            '${_countdown(state.displayTime, e.date)}';
+
     return _InfoCard(
       title: '🌑  Eclipses',
       rows: [
-        _Row(
-          'Next solar eclipse:',
-          solar == null
-              ? 'Calculating…'
-              : '${_fmtDate(solar.date)}  ${solar.typeLabel}',
-        ),
-        _Row(
-          'Next lunar eclipse:',
-          lunar == null
-              ? 'Calculating…'
-              : '${_fmtDate(lunar.date)}  ${lunar.typeLabel}',
-        ),
+        _Row('Next solar eclipse:', describe(solar)),
+        _Row('Next lunar eclipse:', describe(lunar)),
       ],
     );
   }
